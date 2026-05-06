@@ -1,4 +1,4 @@
-// ⚠️ Change this to your deployed backend URL when live
+// ⚠️ Change this to your deployed backend URL when live on Render
 const API_URL = "https://your-backend.onrender.com";
 
 let lastResult = null;
@@ -10,11 +10,9 @@ async function predict() {
   const errorBox = document.getElementById("errorBox");
   const resultCard = document.getElementById("resultCard");
 
-  // Hide previous results
   resultCard.classList.add("hidden");
   errorBox.classList.add("hidden");
 
-  // Validate inputs
   const applicantIncome = parseFloat(document.getElementById("ApplicantIncome").value);
   const loanAmount = parseFloat(document.getElementById("LoanAmount").value);
 
@@ -27,7 +25,6 @@ async function predict() {
     return;
   }
 
-  // Loading state
   btn.disabled = true;
   btnText.classList.add("hidden");
   btnLoader.classList.remove("hidden");
@@ -83,13 +80,11 @@ function showResult(data, input) {
   document.getElementById("pctApproved").textContent = `${data.probability.approved}%`;
   document.getElementById("pctRejected").textContent = `${data.probability.rejected}%`;
 
-  // Animate bars after render
   setTimeout(() => {
     document.getElementById("barApproved").style.width = `${data.probability.approved}%`;
     document.getElementById("barRejected").style.width = `${data.probability.rejected}%`;
   }, 100);
 
-  // Summary
   const totalIncome = input.ApplicantIncome + input.CoapplicantIncome;
   const ratio = (totalIncome / input.LoanAmount).toFixed(2);
   document.getElementById("summary").innerHTML = `
@@ -130,8 +125,8 @@ function downloadReport() {
 ===========================
    LoanIQ - Prediction Report
 ===========================
-Date     : ${new Date().toLocaleString()}
-Result   : ${d.prediction}
+Date      : ${new Date().toLocaleString()}
+Result    : ${d.prediction}
 Confidence: ${d.confidence}%
 
 --- Applicant Details ---
@@ -144,11 +139,11 @@ Property Area  : ${i.Property_Area}
 Credit History : ${i.Credit_History == 1 ? "Good" : "Bad"}
 
 --- Financials ---
-Applicant Income  : ₹${i.ApplicantIncome.toLocaleString()}
+Applicant Income   : ₹${i.ApplicantIncome.toLocaleString()}
 Co-applicant Income: ₹${i.CoapplicantIncome.toLocaleString()}
-Total Income      : ₹${(i.ApplicantIncome + i.CoapplicantIncome).toLocaleString()}
-Loan Amount       : ₹${i.LoanAmount.toLocaleString()}
-Loan Term         : ${i.Loan_Amount_Term} months
+Total Income       : ₹${(i.ApplicantIncome + i.CoapplicantIncome).toLocaleString()}
+Loan Amount        : ₹${i.LoanAmount.toLocaleString()}
+Loan Term          : ${i.Loan_Amount_Term} months
 
 --- Probabilities ---
 Approved : ${d.probability.approved}%

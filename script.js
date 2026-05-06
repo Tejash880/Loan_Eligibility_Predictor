@@ -1,5 +1,5 @@
 // ⚠️ Change this to your deployed backend URL when live on Render
-const API_URL = "https://your-backend.onrender.com";
+const API_URL = "https://loan-eligibility-predictor-n53p.onrender.com";
 
 let lastResult = null;
 

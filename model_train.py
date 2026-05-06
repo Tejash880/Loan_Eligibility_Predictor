@@ -7,26 +7,23 @@ from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.preprocessing import LabelEncoder
 
-# Paths
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# Both dataset and model saved in same root directory
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATASET_PATH = os.path.join(BASE_DIR, "loan_dataset.csv")
-MODEL_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "loan_model.pkl")
+MODEL_PATH = os.path.join(BASE_DIR, "loan_model.pkl")
 
 def load_and_preprocess(path):
     df = pd.read_csv(path)
     print(f"Dataset loaded: {df.shape[0]} rows, {df.shape[1]} columns")
 
-    # Drop Loan_ID if present
     if "Loan_ID" in df.columns:
         df.drop("Loan_ID", axis=1, inplace=True)
 
-    # Fill missing values
     for col in df.select_dtypes(include="object").columns:
         df[col].fillna(df[col].mode()[0], inplace=True)
     for col in df.select_dtypes(include="number").columns:
         df[col].fillna(df[col].median(), inplace=True)
 
-    # Encode categorical columns
     le = LabelEncoder()
     cat_cols = df.select_dtypes(include="object").columns.tolist()
     if "Loan_Status" in cat_cols:
@@ -34,10 +31,8 @@ def load_and_preprocess(path):
     for col in cat_cols:
         df[col] = le.fit_transform(df[col])
 
-    # Encode target
     df["Loan_Status"] = df["Loan_Status"].map({"Y": 1, "N": 0})
 
-    # Feature engineering
     df["Total_Income"] = df["ApplicantIncome"] + df["CoapplicantIncome"]
     df["Income_Loan_Ratio"] = df["Total_Income"] / (df["LoanAmount"] + 1)
     df["Loan_Term_Ratio"] = df["LoanAmount"] / (df["Loan_Amount_Term"] + 1)
@@ -52,7 +47,6 @@ def train():
         "ApplicantIncome", "CoapplicantIncome", "LoanAmount", "Loan_Amount_Term",
         "Credit_History", "Property_Area", "Total_Income", "Income_Loan_Ratio", "Loan_Term_Ratio"
     ]
-    # Only keep columns that exist
     feature_cols = [c for c in feature_cols if c in df.columns]
 
     X = df[feature_cols]

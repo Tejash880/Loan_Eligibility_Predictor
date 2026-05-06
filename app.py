@@ -7,7 +7,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-# Load model
+# Load model from same directory
 MODEL_PATH = os.path.join(os.path.dirname(__file__), "loan_model.pkl")
 
 model = None
